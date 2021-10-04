@@ -30,7 +30,7 @@ If you want to compile this locally, make sure to check out the section about **
 
 ## Examples
 
-![Title Slide from example.pdf](./example-image-01.png | width=250 "Title slide")
+![Title Slide from example.pdf](./example-image-01.png | width=250)
 ![Slide 5 from example.pdf](./example-image-05.png "Example slide")
 ![Slide 11 from example.pdf](./example-image-11.png "Slide with JU-like layout")
 ![Slide 32 from example.pdf](./example-image-32.png "Slide with code")
