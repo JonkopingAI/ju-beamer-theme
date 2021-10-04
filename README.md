@@ -7,11 +7,11 @@ A [LaTeX Beamer](https://www.overleaf.com/learn/latex/Beamer) theme with element
 This Beamer theme is based on the popular [Metropolis theme](https://github.com/matze/mtheme), with some customizations and additions made by myself or derived from other themes, e.g. [colorful-dream](https://github.com/EagleoutIce/beamer-themes).
 All the usual customizations provided by the Metropolis theme should work; if you're not familiar with it, check out the [documentation of Metropolis](https://ftpmirror1.infania.net/mirror/CTAN/macros/latex/contrib/beamer-contrib/themes/metropolis/doc/metropolistheme.pdf) for detailed information.
 
-:warning: This theme is **_not_ officially endorsed** by Jönköping University.  It does **not fully adhere** to JU's graphic manual.  Use at your own discretion!
+:warning: This theme is **_not_ officially endorsed** by Jönköping University.  Use at your own discretion!
 
 ## Quickstart
 
-:notebook: If you [write to me](mailto:marcel.bollmann@ju.se) from a `@ju.se` e-mail address, I can share a link to an **Overleaf template** with everything included.
+:notebook: If you [write to me](mailto:marcel.bollmann@ju.se) from a `@ju.se` e-mail address, I can share a link to an **Overleaf template**.
 
 1. Copy the `latexmkrc` as well as the `sty/` directory into your project.
 
