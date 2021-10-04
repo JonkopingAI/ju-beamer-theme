@@ -1,0 +1,646 @@
+\documentclass[10pt]{beamer}
+
+\usetheme[%
+    progressbar=frametitle,
+    block=fill,
+    numbering=fraction,
+    footer=crumbs,
+    sectionpage=numbered,
+    subsectionpage=none,
+    titleformattitle=smallcaps,
+    titleformatsubtitle=smallcaps,
+    %%% new options for JU theme:
+    maincolor=purple,
+    titlelogo=jth,
+    headlogo=ju,
+    typeface=source,
+]{metropolis-ju}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=.,
+    filecolor=juTurquoise,
+    urlcolor=juDarkBlue,
+    pdftitle={JU Beamer Theme},
+    pdfpagemode=FullScreen,
+}
+
+\usepackage{mybiblatex}
+\addbibresource{example.bib}
+
+\usepackage{appendixnumberbeamer}
+\usepackage{adjustbox}
+\usepackage{booktabs}
+\usepackage{fontawesome5}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{myminted}
+
+\title[JU Beamer Theme]{A Jönköping University Beamer Theme}
+\subtitle{Based on Metropolis, with many customizations}
+\author{Marcel Bollmann}
+\date{04.10.2021}
+\institute{%
+\hypersetup{urlcolor=.}
+\makebox[2.2ex][c]{\faEnvelope}\enspace\href{mailto:marcel.bollmann@ju.se}{\texttt{marcel.bollmann@ju.se}}\\%
+\makebox[2.2ex][c]{\faHome}\enspace\url{https://marcel.bollmann.me/}%
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[stretch=3]
+
+\juHeading{A word of warning}
+
+  \ifboolexpr{bool {xetex} or bool {luatex}}{
+  }{
+    \metroset{block=fill}
+    \begin{alertblock}{Warning}
+    You need to compile with XeLaTeX or LuaLaTeX to get proper font support! \textit{(LuaLaTeX is recommended on Overleaf.)}
+    \end{alertblock}
+  }
+
+  \begin{itemize}
+    \item This theme is \alert{not officially endorsed} by Jönköping University.
+    \item It does \alert{not fully adhere} to JU's Graphic Manual.
+    \item Use at your own discretion!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\centering
+\juHeading{Contents}
+\twocol{\tableofcontents[sections={1-2}]}{\tableofcontents[sections={3-5}]}
+
+\end{frame}
+
+
+\section{Features}
+\subsection{How to use}
+
+\begin{frame}[fragile,stretch=3]{How to use}
+  \begin{itemize}
+    \item Copy the contents of the \texttt{sty/} directory into your project.
+  
+    \item If you downloaded this template from GitHub, you also need to \href{https://intranet.hj.se/intranet/en/service-and-support/marketing-and-communication/graphic-profile/logotypes.html}{{\small\faExternalLink*}~download the JU~logotypes} from the intranet and extract the PNG~versions into the \texttt{sty/img/} directory.
+  
+    \item You can then use this theme by including:\medskip
+  
+    \begin{minted}{latex}
+    \usetheme[maincolor=purple]{metropolis-ju}
+    \end{minted}
+    
+    \medskip
+    \item \alert{Use LuaLaTeX for best results.}
+  \end{itemize}
+\end{frame}
+
+\subsection{Theme options}
+
+{
+\metroset{maincolor=grey}
+\begin{frame}[fragile,stretch=3]{Options: Color theme}
+
+    \begin{itemize}
+    \item The \texttt{maincolor} option sets the background colors of title/standout frames as well as the      headline.\medskip
+    
+    It can be either \colorbox{juPurple}{\textcolor{white}{\texttt{purple}}} (default) or \colorbox{juGrey}{\textcolor{white}{\texttt{grey{\vphantom l}}}}.
+
+    \item This slide shows what the theme looks like with \texttt{maincolor=grey}.
+  
+    \item You can change colors in the middle of your presentation via:\medskip
+
+          \mint{latex}|   \metroset{maincolor=grey}|
+    \end{itemize}
+    
+    \medskip
+    \textit{Note: For changing the font theme, see the later \hyperlink{selectfonts}{\textcolor{juDarkBlue}{``Fonts'' section.}}}
+\end{frame}
+}
+
+\begin{frame}[stretch]{Options: Logotypes}
+  \begin{itemize}
+    \item The \texttt{titlelogo} option sets the logotype to put on the title frame.  It can be either:
+    \begin{itemize}
+        \item \texttt{none}: no logo
+        \item \texttt{ju}: JU's main logotype \alert{\bf (this is the default)}
+        \item \texttt{jth}: JTH's logotype
+    \end{itemize}
+    \item The \texttt{headlogo} option does the same thing, but for the smaller logotype in the headline.
+    \item Logotypes from the other schools aren't currently included, but could of course also be added.
+  \end{itemize}
+\end{frame}
+
+{\metroset{maincolor=grey}
+\begin{frame}[fragile,stretch]{Aside --- Logotypes in Other Places}
+
+The logotypes can be inserted with the following commands:
+
+\begin{center}
+\begin{tabular}{lc}
+    \mintinline{latex}{\juLogo} & \begin{minipage}{0.3\textwidth}\centering\juLogo[height=5ex]{}\end{minipage} \\[2ex]
+    \mintinline{latex}{\juLogoSmall} & \begin{minipage}{0.3\textwidth}\centering\juLogoSmall[height=2.5ex]{}\end{minipage} \\
+\end{tabular}
+\end{center}
+
+Scaling options can be given as an argument, e.g.\ \mintinline{latex}{\juLogo[height=2cm]}.
+
+\begin{itemize}
+    \item To get the white versions of the logos, append \texttt{W} to the command; e.g. \mintinline{latex}{\juLogoSmallW}.
+    \item To get the JTH logos, use \mintinline{latex}{\jthLogo...} equivalents.
+\end{itemize}
+
+\end{frame}
+}
+
+\begin{frame}{Options: Footer and Section Pages}
+  In addition to all the options the standard \textsc{Metropolis} theme provides, I added the following options, implementing features from \textsc{colorful-dream}:
+
+  \begin{itemize}
+    \item \texttt{footer=crumbs} will put the ``breadcrumbs'' line in the footer with the current section/subsection titles.
+    \item \texttt{sectionpage=numbered} will produce the section pages with numbered circles.
+    \item \texttt{subsectionpage=numbered} will do the same thing for subsections \textit{(not enabled in this presentation)}.
+  \end{itemize}
+\end{frame}
+
+\subsection{Layout}
+
+\begin{frame}[stretch=5]{Layout: Typesetting the frame title}
+  The frame title on the \alert{colored bar} at the top of the slide comes from the \textsc{Metropolis} theme.
+
+  This can look nice, but \alert{does not match JU's own presentation templates.}
+  
+  However, you can also get something closer to JU's official style\ldots
+\end{frame}
+
+\begin{frame}[fragile,stretch=1.5]
+  \juHeading{Typesetting the frame title}
+  
+  A frame \emph{without} a title will look like this.
+  
+  The heavy, all-uppercase heading can be produced via the command:
+  
+    \mint{latex}|   \juHeading{A title in JU style}|
+
+  The automatic upper-casing might cause some issues with certain symbols or commands inside the heading.  If that's the case, you can use this version without the upper-casing magic:
+
+    \mint{latex}|   \juHeadingCased{A HEADING WITH ``QUOTES''}|
+\end{frame}
+
+\begin{frame}[fragile,stretch=3.5]{Layout: Spacing}
+It's nice to have less text per slide!
+
+\begin{itemize}
+    \item Frames now have an additional \alert{\texttt{stretch}} key with a stretch factor as an optional value (defaults to~\texttt{2}).  It will \alert{increase spacing} between paragraphs and list items.
+
+    \item The idea is to make it easier to stretch slide contents, \emph{without} littering the code with \mintinline{latex}{\vspace{...}} commands everywhere.
+
+    \item This slide uses \texttt{stretch=3.5}.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Layout: Two-column layout}
+To quickly get a two-column layout, you can use:\medskip
+    
+    \mint{latex}|\twocol{First column here.}{Second column here.}|
+    \medskip
+    
+    By default, this will make both columns equally wide, namely \mintinline{latex}{0.475\linewidth}.
+    
+    \bigskip
+    \twocol[0.3]{An optional argument can be used to specify a different factor for the first column.  Here, I used \texttt{0.3}.}{The second column will automatically expand so that the two columns combined take up \mintinline{latex}{0.95\linewidth}. \textit{(This is less than~1 so that there is some padding between them.)}}
+\end{frame}
+
+
+\section{Colors}
+
+\begin{frame}{Colors}
+  This theme defines the following colors that you can use anywhere in your presentation. They are all based on the color values in JU's official Graphic Manual.
+  \bigskip
+  
+  \centering
+  \begin{tabular}{ >{\raggedleft\arraybackslash} m{3cm} m{1cm}  >{\raggedleft\arraybackslash} m{3cm} m{1cm} }
+    \tt juPurple & \colorbox{juPurple}{\makebox(14,14){~}} &  \tt juYellow & \colorbox{juYellow}{\makebox(14,14){~}} \\
+    \tt juGrey & \colorbox{juGrey}{\makebox(14,14){~}} & \tt juTurquoise & \colorbox{juTurquoise}{\makebox(14,14){~}} \\
+    &&
+    \tt juDarkBlue & \colorbox{juDarkBlue}{\makebox(14,14){~}} \\
+    &&
+    \tt juBeige & \colorbox{juBeige}{\makebox(14,14){~}} \\
+  \end{tabular}
+\end{frame}
+
+\subsection{Tints}
+
+\begin{frame}{Colors}
+  Different color tints are also defined.
+  \bigskip
+  
+  \centering
+ \begin{tabular}{ >{\raggedleft\arraybackslash} m{3.5cm} m{1cm}  >{\raggedleft\arraybackslash} m{3.5cm} m{1cm} }
+    \tt juPurpleDarker & \colorbox{juPurpleDarker}{\makebox(14,14){~}} & & \\
+    \tt juPurpleFade1 & \colorbox{juPurpleFade1}{\makebox(14,14){~}} & \tt juGreyFade1 & \colorbox{juGreyFade1}{\makebox(14,14){~}} \\
+    \tt juPurpleFade2 & \colorbox{juPurpleFade2}{\makebox(14,14){~}} & \tt juGreyFade2 & \colorbox{juGreyFade2}{\makebox(14,14){~}} \\
+    \tt juPurpleFade3 & \colorbox{juPurpleFade3}{\makebox(14,14){~}} & \tt juGreyFade3 & \colorbox{juGreyFade3}{\makebox(14,14){~}} \\
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{Colors}
+  Color tints for the secondary colors.
+  \bigskip
+  
+  \centering
+  \begin{tabular}{ >{\raggedleft\arraybackslash} m{3.5cm} m{1cm}  >{\raggedleft\arraybackslash} m{3.5cm} m{1cm} }
+    \tt juYellowFade1 & \colorbox{juYellowFade1}{\makebox(14,14){~}} & \tt juTurquoiseFade1 & \colorbox{juTurquoiseFade1}{\makebox(14,14){~}} \\
+    \tt juYellowFade2 & \colorbox{juYellowFade2}{\makebox(14,14){~}} & \tt juTurquoiseFade2 & \colorbox{juTurquoiseFade2}{\makebox(14,14){~}} \\
+    \tt juYellowFade3 & \colorbox{juYellowFade3}{\makebox(14,14){~}} & \tt juTurquoiseFade3 & \colorbox{juTurquoiseFade3}{\makebox(14,14){~}} \\[2em]
+    \tt juDarkBlueFade1 & \colorbox{juDarkBlueFade1}{\makebox(14,14){~}} & & \\
+    \tt juDarkBlueFade2 & \colorbox{juDarkBlueFade2}{\makebox(14,14){~}} & & \\
+    \tt juDarkBlueFade3 & \colorbox{juDarkBlueFade3}{\makebox(14,14){~}} & & \\
+    
+  \end{tabular}
+\end{frame}
+
+\subsection{Usage}
+
+\begin{frame}[fragile]{Using Colors}
+
+Colors can be used with any commands, for example:
+\begin{center}
+    \begin{tabular}{ll}
+    \toprule
+        \mintinline{latex}{\textcolor{juYellow}{Lorem ipsum}} & \textcolor{juYellow}{Lorem ipsum} \\
+    \bottomrule
+    \end{tabular}
+\end{center}
+
+\medskip
+Some predefined commands that use these colors:
+
+\begin{center}
+    \begin{tabular}{ll}
+    \toprule
+        \mintinline{latex}{\alert{Lorem ipsum}} & \alert{Lorem ipsum} \\
+        \mintinline{latex}{\alertExample{Lorem ipsum}} & \alertExample{Lorem ipsum} \\
+        \mintinline{latex}{\highlight{Lorem ipsum}} & \highlight{Lorem ipsum} \\
+
+    \bottomrule
+    \end{tabular}
+\end{center}
+
+\medskip
+The colors are also used in different predefined \hyperlink{environments}{\textcolor{juDarkBlue}{environments}} and \hyperlink{blocks}{\textcolor{juDarkBlue}{blocks}}.
+
+\end{frame}
+
+
+\section{Fonts}
+\label{sec:fonts}
+
+\subsection{Selecting a font theme}
+
+\begin{frame}[fragile,label=selectfonts]{Fonts}
+
+JU's Graphic Manual uses \alert{BentonSans} and \alert{Scala (Sans) OT} as their main fonts, but they are not free and not available on Overleaf.\medskip
+
+  Therefore, this theme provides a number of alternatives:
+  
+      \begin{itemize}
+        \item \alert{\texttt{arial}} uses the recommended web font from JU's Graphic Manual, which is plain old Arial.
+        \item \alert{\texttt{franklin}} uses Libre Franklin, which supposedly is the closest free equivalent to BentonSans.  (It doesn't support \textsc{small caps} though.)
+        \item \alert{\texttt{source}} uses Adobe's Source fonts, which are slightly more different from BentonSans, but look potentially nicer.
+        \item \alert{\texttt{fira}} is the default font of the \textsc{Metropolis} theme, but has no similarity to JU's recommended fonts.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Selecting a Font Theme}
+
+Select a font theme with the option \texttt{typeface=<...>}:
+
+\begin{center}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llll}
+\toprule
+\bf Typeface & \bf Sans font & \bf Mono font & \bf Serif font \\
+\midrule
+    \texttt{arial} & Arial/Inter & Courier New & Times New Roman \\
+%    \multicolumn{4}{l}{~~~\footnotesize\itshape --- Recommended ``web fonts'' from JU's Graphic Manual, but a bit plain.} \\[.4em]
+    \texttt{franklin} & Libre Franklin & Hack & Libre Baskerville \\
+%    \multicolumn{4}{l}{~~~\footnotesize\itshape --- Closest free equivalent to Benton Sans, but doesn't have \textsc{small caps}.} \\[.4em]
+    \texttt{source} & Source Sans Pro & Source Code Pro & Source Serif Pro \\
+%    \multicolumn{4}{l}{~~~\footnotesize\itshape --- Adobe open fonts, still close to Benton Sans.} \\[.4em]
+    \texttt{fira} & Fira Sans & Fira Code/Mono & Charter \\
+%    \multicolumn{4}{l}{~~~\footnotesize\itshape --- Default fonts of the Metropolis theme; no similarity to JU's fonts.} \\[.4em]
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{center}
+
+  \ifboolexpr{bool {xetex} or bool {luatex}}{
+  }{
+  \metroset{block=fill}
+    \begin{alertblock}{Warning}
+    You are \textbf{not} currently compiling with XeLaTeX or LuaLaTeX!  Font selection will \textbf{not} work in plain (pdf)\LaTeX{}!
+    \end{alertblock}
+  }
+
+\bigskip
+\begin{block}{Fonts currently in use}
+\makeatletter{\f@family}, {\tt\f@family}, {\rmfamily\f@family}\makeatother
+\end{block}
+
+\end{frame}
+
+\subsection{Samples}
+
+{\metroset{typeface=arial}
+\begin{frame}[fragile]{Font Samples: Arial}
+
+Here's a sample of \texttt{typeface=arial}.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+    Sans (default) & The five boxing wizards jump quickly. \\
+    \mintinline{latex}{\textit} & \textit{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textbf} & \textbf{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textsc} & \textsc{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\extraboldsans} & {\extraboldsans The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\rmfamily} & {\rmfamily The five boxing wizards jump quickly.} \\
+      & {\rmfamily The \textbf{five} \textit{boxing} \textbf{\textit{wizards}} \textsc{jump} \textbf{\textsc{quickly}}.} \\
+    \mintinline{latex}{\texttt} & \texttt{The five boxing wizards jump quickly.} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+  Serif font is not used anywhere by default.
+
+  The \mintinline{latex}{\extraboldsans} variant is only used for the~\mintinline{latex}{\juHeading}.
+\end{frame}
+}
+
+{\metroset{typeface=franklin}
+\begin{frame}[fragile]{Font Samples: Libre Franklin}
+
+Here's a sample of \texttt{typeface=franklin}.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+    Sans (default) & The five boxing wizards jump quickly. \\
+    \mintinline{latex}{\textit} & \textit{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textbf} & \textbf{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textsc} & \textsc{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\extraboldsans} & {\extraboldsans The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\rmfamily} & {\rmfamily The five boxing wizards jump quickly.} \\
+      & {\rmfamily The \textbf{five} \textit{boxing} \textbf{\textit{wizards}} \textsc{jump} \textbf{\textsc{quickly}}.} \\
+    \mintinline{latex}{\texttt} & \texttt{The five boxing wizards jump quickly.} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+  Serif font is not used anywhere by default.
+
+  The \mintinline{latex}{\extraboldsans} variant is only used for the~\mintinline{latex}{\juHeading}.
+\end{frame}
+}
+
+{\metroset{typeface=source}
+\begin{frame}[fragile]{Font Samples: Adobe's Source Fonts}
+
+Here's a sample of \texttt{typeface=source}.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+    Sans (default) & The five boxing wizards jump quickly. \\
+    \mintinline{latex}{\textit} & \textit{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textbf} & \textbf{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textsc} & \textsc{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\extraboldsans} & {\extraboldsans The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\rmfamily} & {\rmfamily The five boxing wizards jump quickly.} \\
+      & {\rmfamily The \textbf{five} \textit{boxing} \textbf{\textit{wizards}} \textsc{jump} \textbf{\textsc{quickly}}.} \\
+    \mintinline{latex}{\texttt} & \texttt{The five boxing wizards jump quickly.} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+  Serif font is not used anywhere by default.
+
+  The \mintinline{latex}{\extraboldsans} variant is only used for the~\mintinline{latex}{\juHeading}.
+\end{frame}
+}
+
+
+{\metroset{typeface=fira}
+\begin{frame}[fragile]{Font Samples: Fira Fonts}
+
+Here's a sample of \texttt{typeface=fira}.
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+    Sans (default) & The five boxing wizards jump quickly. \\
+    \mintinline{latex}{\textit} & \textit{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textbf} & \textbf{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\textsc} & \textsc{The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\extraboldsans} & {\extraboldsans The five boxing wizards jump quickly.} \\
+    \mintinline{latex}{\rmfamily} & {\rmfamily The five boxing wizards jump quickly.} \\
+      & {\rmfamily The \textbf{five} \textit{boxing} \textbf{\textit{wizards}} \textsc{jump} \textbf{\textsc{quickly}}.} \\
+    \mintinline{latex}{\texttt} & \texttt{The five boxing wizards jump quickly.} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+  Serif font is not used anywhere by default.
+
+  The \mintinline{latex}{\extraboldsans} variant is only used for the~\mintinline{latex}{\juHeading}.
+\end{frame}
+}
+
+
+\section{Environments}
+
+\subsection{Enumerations}
+
+{\metroset{itemize=colored}
+\setbeamertemplate{enumerate items}[mycircle]
+\begin{frame}[fragile,stretch,label=environments]{Enumerate environments}
+    Combine \mintinline{latex}{\metroset{itemize=colored}} with
+    {\mintinline{latex}{\setbeamertemplate{enumerate items}[mycircle]}} to get:
+\medskip
+
+    \begin{enumerate}
+        \item One
+        \begin{enumerate}[a]
+            \item alpha
+            \begin{enumerate}[i]
+                \item foo
+                \item bar
+                \item baz
+            \end{enumerate}
+            \item omega
+        \end{enumerate}
+        \item Two
+        \item Three
+    \end{enumerate}
+\end{frame}
+}
+
+\subsection{Quotations}
+
+\begin{frame}[fragile]{Quotations}
+
+    \begin{quote}%
+    Beautiful is better than ugly.
+    Explicit is better than implicit.
+    Simple is better than complex. [\ldots]
+    Readability counts.
+    \end{quote}
+    \attribution{Tim Peters, from \textsc{The Zen of Python}}
+
+\medskip
+The quotation above can be produced via:
+
+    {\footnotesize
+    \begin{minted}{latex}
+    \begin{quote}
+      Beautiful is better than ugly.
+      Explicit is better than implicit.
+      Simple is better than complex. [\ldots]
+      Readability counts.
+    \end{quote}
+    \attribution{Tim Peters, from \textsc{The Zen of Python}}
+    \end{minted}
+    }
+
+\end{frame}
+
+%\begin{frame}[standout]
+%    This is a standout slide.
+%    \bigskip\bigskip
+%    
+%    \normalsize
+%    Standout slides are a Metropolis feature activated through the \texttt{[standout]} frame option.
+%    \bigskip
+%    
+%    In contrast to Metropolis defaults, here it will have the logotype headline, footer, and frame numbering.
+%\end{frame}
+
+
+\subsection{Blocks}
+
+{\metroset{block=transparent}
+\begin{frame}[label=blocks]{Blocks}
+    These are beamer blocks with \texttt{block=transparent}.\medskip
+
+    \begin{block}{This is a regular \texttt{block}.}
+    Here is some content.
+    \end{block}
+
+    \begin{alertblock}{This is an \texttt{alertblock}.}
+    Here is some content.
+    \end{alertblock}
+
+    \begin{exampleblock}{This is an \texttt{exampleblock}.}
+    Here is some content.
+    \end{exampleblock}
+
+    \begin{warningblock}{This is a \texttt{warningblock}.}
+    Here is some content.
+    \end{warningblock}
+\end{frame}
+}
+
+{\metroset{block=fill}
+\begin{frame}{Blocks}
+    These are beamer blocks with \texttt{block=fill}.\medskip
+
+    \begin{block}{This is a regular \texttt{block}.}
+    Here is some content.
+    \end{block}
+
+    \begin{alertblock}{This is an \texttt{alertblock}.}
+    Here is some content.
+    \end{alertblock}
+
+    \begin{exampleblock}{This is an \texttt{exampleblock}.}
+    Here is some content.
+    \end{exampleblock}
+
+    \begin{warningblock}{This is a \texttt{warningblock}.}
+    Here is some content.
+    \end{warningblock}
+\end{frame}
+}
+
+\subsection{Code}
+\begin{frame}[fragile,stretch]{Code Blocks}
+    
+    Since I frequently need to show code examples, I defined some styles and custom commands that can be included with:
+    
+    \mint{latex}|\usepackage{myminted}|
+    
+    This uses the \href{http://tug.ctan.org/macros/latex/contrib/minted/minted.pdf}{{\small\faExternalLink*}~\texttt{minted}} package to typeset code with automatic syntax highlighting.
+    \medskip
+
+    \begin{warningblock}{\faExclamationTriangle{}\enspace{}Important}
+    Every frame that contains code must have the \texttt{[fragile]} option set, or compilation will break with many cryptic errors!
+    \end{warningblock}
+\end{frame}
+
+\begin{frame}[fragile]{Code Blocks}
+    I also defined some commands to easily produce code blocks like the following; see the \LaTeX{} source for details:\medskip
+    
+    \begin{beamercodeblock}\vspace{-.6em}
+      \begin{minted}[linenos,fontsize=\footnotesize]{java}
+      // Your First Program
+
+      class HelloWorld {
+        public static void main(String[] args) {
+          System.out.println("Hello, World!"); 
+        }
+      }
+      \end{minted}
+    \end{beamercodeblock}
+    \beamercaptionblock{\textbf{Listing 1:} A hello world program in Java.}
+
+\end{frame}
+
+
+\subsection{Bibliography}
+\begin{frame}[fragile,stretch]{Bibliography}
+    
+    I use \texttt{biblatex} with some custom definitions, which I also bundled in their own package:
+    
+    \mint{latex}|\usepackage{mybiblatex}|
+    
+    Mainly, this will suppress output of URLs and DOIs, and instead turn the paper title into hyperlinks.  Here's an example:
+
+    \begin{itemize}
+        \item \fullcite{iki-aizawa-2020-language}
+    \end{itemize}
+\end{frame}
+
+\appendix
+\metroset{sectionpage=none}
+\section{Bibliography}
+
+\begin{frame}
+    \juHeading{Bibliography}
+
+    \nocite{*}
+    \printbibliography[heading=none]
+    
+    This slide also demonstrates that appendices work \& play nicely with the other features!
+\end{frame}
+
+\begin{frame}[plain,standout,noframenumbering]
+\juLogoW[height=2.5cm]
+\end{frame}
+
+\end{document}

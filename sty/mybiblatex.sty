@@ -1,0 +1,49 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mybiblatex}
+  [2021/10/01 v0.1 BibLaTeX definitions, adapted for JU beamer template]
+
+\RequirePackage{hyperref}
+\PassOptionsToPackage{
+        natbib=true,
+        style=authoryear-comp,
+        hyperref=true,
+        backend=biber,
+        maxbibnames=99,
+        maxcitenames=2,  % set this to 99 if using \fullcite directly on individual slides
+        uniquelist=minyear,
+        url=false,  % no URL or DOI by default since we make the title clickable; see below
+        doi=false,
+        isbn=false,
+        eprint=false,
+        sorting=nyt,
+    }{biblatex}
+\RequirePackage{biblatex}
+
+%% The following will turn titles into clickable hyperlinks if a DOI or URL field is given
+
+\newcommand{\doiorurl}{%
+  \iffieldundef{doi}
+    {\iffieldundef{url}
+       {}
+       {\strfield{url}}}
+    {http://dx.doi.org/\strfield{doi}}%
+}
+
+\newcommand{\myhref}[1]{%
+ \ifboolexpr{%
+   test {\ifhyperref}
+   and
+   not test {\iftoggle{bbx:url}}
+   and
+   not test {\iftoggle{bbx:doi}}
+  }
+  {\href{\doiorurl}{#1}}
+  {#1}%
+}
+
+\DeclareFieldFormat{title}{\myhref{\mkbibemph{#1}}}
+\DeclareFieldFormat
+  [article,inbook,incollection,inproceedings,patent,thesis,unpublished]
+  {title}{\myhref{\mkbibquote{#1\isdot}}}
+
+\endinput

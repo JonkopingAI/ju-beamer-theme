@@ -1,0 +1,33 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{myminted}
+  [2021/09/27 v0.1 Minted styles and definitions, adapted for JU beamer template]
+\RequirePackage{minted}
+
+% code highlighting style; nice alternatives: colorful,pastie,perldoc,manni
+\usemintedstyle{pastie}
+
+% default options for all minted environments
+\setminted{autogobble,xleftmargin=10pt}
+
+\setbeamercolor{ju_codeblock}{fg=black,bg=juBeige}
+\setbeamercolor{ju_captionblock}{fg=black!2,bg=juDarkBlueFade1}
+
+\newenvironment{beamercodeblock}[1][sep=.4em,leftskip=.6em]{%
+    \vspace{\parskip}%
+    \begin{beamercolorbox}[#1]{ju_codeblock}
+}{%
+    \end{beamercolorbox}%
+    \vspace{-1.5pt}
+}
+\newcommand{\beamercaptionblock}[1]{%
+    \begin{beamercolorbox}[leftskip=.6em,sep=.4em]{ju_captionblock}%
+        #1
+    \end{beamercolorbox}
+}
+
+% print line numbers in grey & sans font
+\renewcommand{\theFancyVerbLine}{\sffamily
+\textcolor{juGrey}{\scriptsize
+\oldstylenums{\arabic{FancyVerbLine}}}}
+
+\endinput

@@ -1,0 +1,508 @@
+%%
+%% ---------------------------------------------------------------------------
+%% Modified 2021 by Marcel Bollmann.
+%% ---------------------------------------------------------------------------
+%% Copyright 2015 Matthias Vogelgesang and the LaTeX community. A full list of
+%% contributors can be found at
+%% 
+%%     https://github.com/matze/mtheme/graphs/contributors
+%% 
+%% and the original template was based on the HSRM theme by Benjamin Weiss.
+%% 
+%% This work is licensed under a Creative Commons Attribution-ShareAlike 4.0
+%% International License (https://creativecommons.org/licenses/by-sa/4.0/).
+%% ---------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerinnerthememetropolis-ju}[2021/10/04 Metropolis inner theme, adapted for JU style]
+\RequirePackage{etoolbox}
+\RequirePackage{keyval}
+\RequirePackage{calc}
+\RequirePackage{pgfopts}
+\RequirePackage{tikz}
+\RequirePackage{fontawesome5}
+\pgfkeys{
+  /metropolis/inner/sectionpage/.cd,
+    .is choice,
+    none/.code=\metropolis@disablesectionpage,
+    simple/.code={\metropolis@enablesectionpage
+                  \setbeamertemplate{section page}[simple]},
+    progressbar/.code={\metropolis@enablesectionpage
+                       \setbeamertemplate{section page}[progressbar]},
+    numbered/.code={\metropolis@enablesectionpage
+                    \setbeamertemplate{section page}[numbered]},
+}
+\pgfkeys{
+  /metropolis/inner/subsectionpage/.cd,
+    .is choice,
+    none/.code=\metropolis@disablesubsectionpage,
+    simple/.code={\metropolis@enablesubsectionpage
+                  \setbeamertemplate{section page}[simple]},
+    progressbar/.code={\metropolis@enablesubsectionpage
+                       \setbeamertemplate{section page}[progressbar]},
+    numbered/.code={\metropolis@enablesubsectionpage
+                    \setbeamertemplate{section page}[numbered]},
+}
+\newcommand{\metropolis@inner@setdefaults}{
+  \pgfkeys{/metropolis/inner/.cd,
+    sectionpage=progressbar,
+    subsectionpage=none
+  }
+}
+\setbeamertemplate{title page}{
+  \begin{minipage}[b][\paperheight]{\textwidth}
+    \ifx\inserttitlegraphic\@empty\else\usebeamertemplate*{title graphic}\fi
+    \vfill%
+    \ifx\inserttitle\@empty\else\usebeamertemplate*{title}\fi
+    \ifx\insertsubtitle\@empty\else\usebeamertemplate*{subtitle}\fi
+    \usebeamertemplate*{title separator}
+    \ifx\beamer@shortauthor\@empty\else\usebeamertemplate*{author}\fi
+    \ifx\insertdate\@empty\else\usebeamertemplate*{date}\fi
+    \ifx\insertinstitute\@empty\else\usebeamertemplate*{institute}\fi
+    \vfill
+    \vspace*{1mm}
+  \end{minipage}
+}
+\def\maketitle{%
+  \ifbeamer@inframe
+    \titlepage
+  \else
+    {%
+      \setbeamercolor{background canvas}{use=background on title/section, bg=background on title/section.bg}
+      \frame[plain,noframenumbering]{\titlepage}
+    }
+  \fi
+}
+\def\titlepage{%
+  \usebeamertemplate{title page}
+}
+\setbeamertemplate{title graphic}{
+  \vbox to 0pt {
+    \vspace*{2em}
+    \inserttitlegraphic%
+  }%
+  \nointerlineskip%
+}
+\setbeamertemplate{title}{
+  \raggedright%
+  \linespread{1.0}%
+  \inserttitle%
+  \par%
+  \vspace*{0.5em}
+}
+\setbeamertemplate{subtitle}{
+  \raggedright%
+  \insertsubtitle%
+  \par%
+  \vspace*{0.5em}
+}
+\newlength{\metropolis@titleseparator@linewidth}
+\setlength{\metropolis@titleseparator@linewidth}{0.4pt}
+\setbeamertemplate{title separator}{
+  \begin{tikzpicture}
+    \fill[fg] (0,0) rectangle (\textwidth, \metropolis@titleseparator@linewidth);
+  \end{tikzpicture}%
+  \par%
+}
+\setbeamertemplate{author}{
+  \vspace*{2em}
+  \insertauthor%
+  \par%
+  \vspace*{0.25em}
+}
+\setbeamertemplate{date}{
+  \insertdate%
+  \par%
+}
+\setbeamertemplate{institute}{
+  \vspace*{3mm}
+  \insertinstitute%
+  \par%
+}
+\defbeamertemplate{section page}{simple}{
+  \begin{center}
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead\par
+    \ifx\insertsubsectionhead\@empty\else
+      \usebeamercolor[fg]{subsection title}
+      \usebeamerfont{subsection title}
+      \insertsubsectionhead
+    \fi
+  \end{center}
+}
+\defbeamertemplate{section page}{progressbar}{
+  \centering
+  \begin{minipage}{22em}
+    \raggedright
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead\\[-1ex]
+    \usebeamertemplate*{progress bar in section page}
+    \par
+    \ifx\insertsubsectionhead\@empty\else%
+      \usebeamercolor[fg]{subsection title}%
+      \usebeamerfont{subsection title}%
+      \insertsubsectionhead
+    \fi
+  \end{minipage}
+  \par
+  \vspace{\baselineskip}
+}
+
+%%%%%%%%% This part is derived from colorful-dream <https://github.com/EagleoutIce/beamer-themes>
+% Changes:
+%  - make sections after \appendix not count
+\newcounter{metrocd@sectioncount}
+\providebool{metrocd@countsections}
+\booltrue{metrocd@countsections}
+\preto\section{\ifbool{metrocd@countsections}{\write\@auxout{\noexpand\stepcounter{metrocd@sectioncount}}}{}}
+\AtBeginDocument{%
+  \apptocmd{\appendix}{%
+    \boolfalse{metrocd@countsections}%
+  }{}{}%
+}
+\def\btcd@tikzcirc#1{\tikz{\path[draw,thick] circle [radius=6\p@] node[font=\scriptsize,align=center] {\hyperlink{section.#1}{\phantom{Ig}}};}}
+\def\fbtcd@tikzcirc#1{\tikz{\path[draw,thick,fill=palette primary.fg] circle [radius=6\p@] node[font=\scriptsize,align=center] {\hyperlink{section.#1}{\phantom{Ig}}} node[font=\fontseries{sb}\scriptsize,text=palette primary.bg] {\thesection};}}
+\defbeamertemplate{section page}{numbered}{
+  \begin{center}
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead
+    \par
+    
+    {\foreach \i in {1,...,\themetrocd@sectioncount}{\ifnum\i=\value{section}\fbtcd@tikzcirc{\i}\else\btcd@tikzcirc{\i}\fi}}
+    \par
+    
+    \ifx\insertsubsectionhead\@empty\else%
+      \usebeamercolor[fg]{subsection title}%
+      \usebeamerfont{subsection title}%
+      \insertsubsectionhead
+    \fi
+  \end{center}
+  \par
+%  \vspace{\baselineskip}
+}
+%%%%%%%%%%
+
+\newcommand{\metropolis@disablesectionpage}{
+  \AtBeginSection{
+    % intentionally empty
+  }
+}
+\newcommand{\metropolis@enablesectionpage}{
+  \AtBeginSection{
+    \ifbeamer@inframe
+      \sectionpage
+    \else
+      {%
+        \setbeamercolor{background canvas}{use=background on title/section, bg=background on title/section.bg}
+        \setbeamertemplate{footline}{\usebeamertemplate*{headlogo}}
+        \frame[noframenumbering,standout]{\sectionpage}
+      }
+    \fi
+  }
+}
+\setbeamertemplate{subsection page}{%
+  \usebeamertemplate*{section page}
+}
+\newcommand{\metropolis@disablesubsectionpage}{
+  \AtBeginSubsection{
+    % intentionally empty
+  }
+}
+\newcommand{\metropolis@enablesubsectionpage}{
+  \AtBeginSubsection{
+    \ifbeamer@inframe
+      \subsectionpage
+    \else
+      {%
+        \setbeamercolor{background canvas}{use=background on title/section, bg=background on title/section.bg}
+        \setbeamertemplate{footline}{\usebeamertemplate*{headlogo}}
+        \frame[noframenumbering,standout]{\subsectionpage}
+      }
+    \fi
+  }
+}
+\newlength{\metropolis@progressonsectionpage}
+\newlength{\metropolis@progressonsectionpage@linewidth}
+\setlength{\metropolis@progressonsectionpage@linewidth}{0.4pt}
+\setbeamertemplate{progress bar in section page}{
+  \setlength{\metropolis@progressonsectionpage}{%
+    \textwidth * \ratio{\insertframenumber pt}{\inserttotalframenumber pt}%
+  }%
+  \begin{tikzpicture}
+    \fill[bg] (0,0) rectangle (\textwidth, \metropolis@progressonsectionpage@linewidth);
+    \fill[fg] (0,0) rectangle (\metropolis@progressonsectionpage, \metropolis@progressonsectionpage@linewidth);
+  \end{tikzpicture}%
+}
+\def\inserttotalframenumber{100}
+\newlength{\metropolis@blocksep}
+\newlength{\metropolis@blockadjust}
+\setlength{\metropolis@blocksep}{0.75ex}
+\setlength{\metropolis@blockadjust}{0.25ex}
+\providecommand{\metropolis@strut}{%
+  \vphantom{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz()}%
+}
+\newcommand{\metropolis@block}[1]{
+  \par\vskip\medskipamount%
+  \setlength{\parskip}{0pt}
+  \ifbeamercolorempty[bg]{block title#1}{%
+    \begin{beamercolorbox}[rightskip=0pt plus 4em]{block title#1}}{%
+  \ifbeamercolorempty[bg]{block title}{%
+    \begin{beamercolorbox}[rightskip=0pt plus 4em]{block title#1}%
+  }%
+  {%
+    \begin{beamercolorbox}[
+      sep=\dimexpr\metropolis@blocksep-\metropolis@blockadjust\relax,
+      leftskip=\metropolis@blockadjust,
+      rightskip=\dimexpr\metropolis@blockadjust plus 4em\relax
+    ]{block title#1}%
+  }}%
+      \usebeamerfont*{block title#1}%
+      \metropolis@strut%
+      \insertblocktitle%
+      \metropolis@strut%
+  \end{beamercolorbox}%
+  \nointerlineskip%
+  \ifbeamercolorempty[bg]{block body#1}{%
+    \begin{beamercolorbox}[vmode]{block body#1}}{
+  \ifbeamercolorempty[bg]{block body}{%
+    \begin{beamercolorbox}[vmode]{block body#1}%
+  }{%
+    \begin{beamercolorbox}[sep=\metropolis@blocksep, vmode]{block body#1}%
+    \vspace{-\metropolis@parskip}
+  }}%
+      \usebeamerfont{block body#1}%
+      \setlength{\parskip}{\metropolis@parskip}%
+}
+\setbeamertemplate{block begin}{\metropolis@block{}}
+\setbeamertemplate{block alerted begin}{\metropolis@block{ alerted}}
+\setbeamertemplate{block example begin}{\metropolis@block{ example}}
+\setbeamertemplate{block end}{\end{beamercolorbox}\vspace*{0.2ex}}
+\setbeamertemplate{block alerted end}{\end{beamercolorbox}\vspace*{0.2ex}}
+\setbeamertemplate{block example end}{\end{beamercolorbox}\vspace*{0.2ex}}
+\setbeamertemplate{itemize items}{\textbullet}
+%% ------------------------------------------------------------------------------------
+%% MB: change spacing
+\newcommand{\metropolis@stretch}{1}  % variable to control stretch on slides
+\newlength{\metropolis@itemsep@body}
+\setlength{\metropolis@itemsep@body}{0.5em}
+\newlength{\metropolis@itemsep@subbody}
+\setlength{\metropolis@itemsep@subbody}{0.15em}
+
+% make default list spacing nicer (and respect stretch)
+\setbeamertemplate{itemize/enumerate body begin}{%
+    \let\beamer@cramped@beforebody\beamer@cramped
+    \renewcommand{\beamer@cramped}{%
+        \setlength{\itemsep}{\metropolis@stretch\metropolis@itemsep@body}%
+    }
+}
+\setbeamertemplate{itemize/enumerate body end}{%
+    \let\beamer@cramped\beamer@cramped@beforebody
+}
+\setbeamertemplate{itemize/enumerate subbody begin}{%
+    \let\beamer@cramped@beforesubbody\beamer@cramped
+    \renewcommand{\beamer@cramped}{%
+        \setlength{\itemsep}{\metropolis@stretch\metropolis@itemsep@subbody}
+    }%
+    \vspace{\metropolis@stretch\metropolis@itemsep@subbody}
+}
+\setbeamertemplate{itemize/enumerate subbody end}{%
+    \let\beamer@cramped\beamer@cramped@beforesubbody
+}
+
+% define "stretch" key for frames
+\providebool{metropolis@is@stretched}
+\define@key{beamerframe}{stretch}[2]{%
+  \renewcommand{\metropolis@stretch}{#1}%
+  \setlength{\parskip}{\metropolis@stretch\metropolis@parskip}%
+  \booltrue{metropolis@is@stretched}%
+}
+  % make sure we revert changes after the stretched frame
+  \apptocmd{\beamer@reseteecodes}{%
+    \ifbool{metropolis@is@stretched}{
+      \renewcommand{\metropolis@stretch}{1}%
+      \setlength{\parskip}{\metropolis@parskip}%
+      \boolfalse{metropolis@is@stretched}%
+    }{}
+  }{}{}
+%% ------------------------------------------------------------------------------------
+%% A new template for enumerations
+\defbeamertemplate{enumerate item}{mycircle}
+{
+  \usebeamerfont*{item projected}%
+  \usebeamercolor[bg]{item projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1.5ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.7ex}}{1.4ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertenumlabel}
+  \end{pgfpicture}%
+}
+
+\defbeamertemplate{enumerate subitem}{mycircle}
+{
+  \usebeamerfont*{subitem projected}%
+  \usebeamercolor[bg]{subitem projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.7ex}}{1.4ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertsubenumlabel}
+  \end{pgfpicture}%
+}
+
+\defbeamertemplate{enumerate subsubitem}{mycircle}
+{
+  \usebeamerfont*{subsubitem projected}%
+  \usebeamercolor[bg]{subsubitem projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.7ex}}{1.4ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertsubsubenumlabel}
+  \end{pgfpicture}%
+}
+
+\defbeamertemplate{enumerate mini template}{mycircle}
+{
+  \usebeamerfont*{\beameritemnestingprefix item projected}%
+  \usebeamercolor[bg]{\beameritemnestingprefix item projected}%
+  \begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+    \pgfpathcircle{\pgfpoint{0pt}{.7ex}}{1.4ex}
+    \pgfusepath{fill}
+    \pgftext[base]{\color{fg}\insertenumlabel}
+  \end{pgfpicture}%
+}
+%% ------------------------------------------------------------------------------------
+
+\mode
+<all>
+{
+  \newenvironment<>{warningblock}[1]{%
+    \begin{actionenv}#2%
+      \def\insertblocktitle{#1}%
+      \par%
+      \mode<presentation>{%\usebeamerfont{block}%
+        \setbeamercolor{local structure}{parent=warning text}}%
+      \usebeamertemplate{block warning begin}}
+    {\par%
+      \usebeamertemplate{block warning end}%
+    \end{actionenv}}
+}
+\defbeamertemplate*{block warning begin}{default}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title warning}
+    \usebeamerfont*{block title warning}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title warning}
+  {}
+  {\ifbeamercolorempty[bg]{block body warning}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body warning}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body warning}%
+    \ifbeamercolorempty[bg]{block body warning}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\defbeamertemplate*{block warning end}{default}
+{\end{beamercolorbox}\vskip\smallskipamount}
+\defbeamertemplate{block warning begin}{rounded}[1][shadow=false]
+{%
+  \par\vskip\medskipamount%
+  \begin{beamerboxesrounded}[upper=block title warning,lower=block body warning,#1]
+    {\raggedright\usebeamerfont*{block title warning}\insertblocktitle}%
+    \raggedright%
+    \usebeamerfont{block body warning}%
+}%
+\defbeamertemplate{block warning end}{rounded}[1][]
+{\end{beamerboxesrounded}\vskip\smallskipamount}
+
+
+
+\setbeamertemplate{caption label separator}{: }
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{footnote}{%
+  \parindent 0em\noindent%
+  \raggedright
+  \usebeamercolor{footnote}\hbox to 0.8em{\hfil\insertfootnotemark}\insertfootnotetext\par%
+}
+\newlength{\metropolis@parskip}
+\setlength{\metropolis@parskip}{0.5em}
+\setlength{\parskip}{\metropolis@parskip}
+\linespread{1.15}
+\define@key{beamerframe}{c}[true]{% centered
+  \beamer@frametopskip=0pt plus 1fill\relax%
+  \beamer@framebottomskip=0pt plus 1fill\relax%
+  \beamer@frametopskipautobreak=0pt plus .4\paperheight\relax%
+  \beamer@framebottomskipautobreak=0pt plus .6\paperheight\relax%
+  \def\beamer@initfirstlineunskip{}%
+}
+\providebool{metropolis@standout}
+\define@key{beamerframe}{standout}[true]{%
+  \booltrue{metropolis@standout}
+  \begingroup
+    \setkeys{beamerframe}{c}
+    %\setkeys{beamerframe}{noframenumbering}
+    \ifbeamercolorempty[bg]{palette primary}{
+      \setbeamercolor{background canvas}{
+        use=palette primary,
+        bg=-palette primary.fg
+      }
+    }{
+      \setbeamercolor{background canvas}{
+        use=palette primary,
+        bg=palette primary.bg
+      }
+    }
+  \centering
+  \usebeamercolor[fg]{palette primary}
+  \usebeamerfont{standout}
+  \ifbeamercolorempty[fg]{footline standout}{}{%
+    \setbeamercolor{footline}{
+      use=footline standout,
+      fg=footline standout.fg,
+      bg=
+    }
+  }
+}
+  \apptocmd{\beamer@reseteecodes}{%
+    \ifbool{metropolis@standout}{
+      \endgroup
+      \boolfalse{metropolis@standout}
+    }{}
+  }{}{}
+  
+\newcommand<>{\juHeading}[1]{{\LARGE\extraboldsans\usebeamercolor[bg]{palette primary}\expandafter\MakeUppercase\expandafter{#1}}\vspace{\parskip}}
+\newcommand<>{\juHeadingCased}[1]{{\LARGE\extraboldsans\usebeamercolor[bg]{palette primary}{#1}}\vspace{\parskip}}
+
+%% MB: Quotes and attributions
+\newcommand*\quotesize{50}
+\newcommand*{\openquote}
+   {\tikz[remember picture,overlay,xshift=1ex,yshift=-3.5ex]
+   \node[fg] (OQ) {\rmfamily\bfseries\fontsize{\quotesize}{\quotesize}\selectfont``};\kern0pt}
+\newcommand*{\closequote}
+  {\tikz[remember picture,overlay,xshift=\textwidth-6ex,yshift=1ex]
+   \node[fg] (CQ) {\rmfamily\bfseries\fontsize{\quotesize}{\quotesize}\selectfont''};}
+\renewenvironment<>{quote}
+{\actionenv#1%
+  \usebeamertemplate{quote begin}%
+  \usebeamerfont{quote}%
+  \usebeamercolor{quotation mark}\openquote%
+  \usebeamercolor{quote}%
+  \list{}{\rightmargin   \leftmargin}
+\item\relax}
+{\endlist\usebeamercolor{quotation mark}\closequote\usebeamertemplate{quote end}\endactionenv}
+\mode
+<article>
+{
+  \renewenvironment<>{quote}{\actionenv#1\originalquote}{\endoriginalquote\endactionenv}
+}
+\newcommand<>{\attribution}[1]{\vspace{-10pt}{\hfill\small ---~#1}\bigskip}
+
+%% MB: bib items
+\defbeamertemplate{bibliography item}{bookmark}
+{\hbox{\hspace{2ex}\faBookmark[regular]}}
+\setbeamertemplate{bibliography item}[bookmark]
+
+\metropolis@inner@setdefaults
+\ProcessPgfPackageOptions{/metropolis/inner}
+\endinput
+%%
+%% End of file `beamerinnerthememetropolis-ju.sty'.

@@ -1,0 +1,531 @@
+%%
+%% ---------------------------------------------------------------------------
+%% Modified 2021 by Marcel Bollmann.
+%% ---------------------------------------------------------------------------
+%% Copyright 2015 Matthias Vogelgesang and the LaTeX community. A full list of
+%% contributors can be found at
+%% 
+%%     https://github.com/matze/mtheme/graphs/contributors
+%% 
+%% and the original template was based on the HSRM theme by Benjamin Weiss.
+%% 
+%% This work is licensed under a Creative Commons Attribution-ShareAlike 4.0
+%% International License (https://creativecommons.org/licenses/by-sa/4.0/).
+%% ---------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerfontthememetropolis-ju}[2021/10/04 Metropolis font theme, adapted for JU style]
+\RequirePackage{etoolbox}
+\RequirePackage{ifxetex}
+\RequirePackage{ifluatex}
+\RequirePackage{pgfopts}
+
+\ifboolexpr{bool {xetex} or bool {luatex}}{
+  \@ifpackageloaded{fontspec}{
+    \PassOptionsToPackage{no-math}{fontspec}
+  }{
+    \RequirePackage[no-math]{fontspec}
+  }
+  \newcounter{fontsnotfound}
+  \newcommand{\checkfont}[1]{%
+    \suppressfontnotfounderror=1%
+    \font\x = "#1" at 10pt
+    \selectfont
+    \ifx\x\nullfont%
+      \stepcounter{fontsnotfound}%
+    \fi%
+    \suppressfontnotfounderror=0%
+  }
+
+  \newcommand{\iffontsavailable}[3]{%
+    \setcounter{fontsnotfound}{0}%
+    \expandafter\forcsvlist\expandafter%
+    \checkfont\expandafter{#1}%
+    \ifnum\value{fontsnotfound}=0%
+      #2%
+    \else%
+      #3%
+    \fi%
+  }
+  
+  \setfontfamily\extraboldsans{Arial Bold}
+  \newcommand{\addfontfeaturefortabular}{}
+  \AtBeginEnvironment{tabular}{%
+    \addfontfeaturefortabular{}%
+  }%
+  
+  \def\fakesc#1{%
+  \begingroup%
+  \xdef\fake@name{\csname\curr@fontshape/\f@size\endcsname}%
+  \fontsize{\fontdimen8\fake@name}{\baselineskip}\selectfont%
+  \uppercase{#1}%
+  \endgroup%
+  }
+  \newcommand\fauxsc[1]{\fauxschelper#1 \relax\relax}
+  \def\fauxschelper#1 #2\relax{%
+    \fauxschelphelp#1\relax\relax%
+    \if\relax#2\relax\else\ \fauxschelper#2\relax\fi%
+  }
+  \def\Hscale{.83}\def\Vscale{.72}\def\Cscale{1.00}
+  \def\fauxschelphelp#1#2\relax{%
+    \ifnum`#1=\lccode`#1\relax\scalebox{\Hscale}[\Vscale]{\char\uccode`#1}\else%
+      \scalebox{\Cscale}[1]{#1}\fi%
+    \ifx\relax#2\relax\else\fauxschelphelp#2\relax\fi}
+}{%
+  \PackageWarning{beamerthememetropolis}{%
+    You need to compile with XeLaTeX or LuaLaTeX to select different fonts%
+  }%
+  \newcommand{\extraboldsans}{\bfseries}
+}
+
+\newcommand{\metropolis@font@typeface@fira}{%
+  \ifboolexpr{bool {xetex} or bool {luatex}}{
+    \iffontsavailable{Fira Sans Light,%
+                      Fira Sans Light Italic,%
+                      Fira Sans,%
+                      Fira Sans Italic}%
+    {%
+      \setsansfont[ItalicFont={Fira Sans Light Italic},%
+                   BoldFont={Fira Sans},%
+                   BoldItalicFont={Fira Sans Italic}]%
+                  {Fira Sans Light}%
+    }{%
+      \iffontsavailable{Fira Sans Light OT,%
+                        Fira Sans Light Italic OT,%
+                        Fira Sans OT,%
+                        Fira Sans Italic OT}%
+      {%
+        \setsansfont[ItalicFont={Fira Sans Light Italic OT},%
+                     BoldFont={Fira Sans OT},%
+                     BoldItalicFont={Fira Sans Italic OT}]%
+                    {Fira Sans Light OT}%
+      }{%
+        \PackageWarning{beamerthememetropolis}{%
+          Could not find Fira Sans fonts%
+        }
+      }
+    }
+    \iffontsavailable{Fira Sans Bold}{%
+      \setfontfamily\extraboldsans{Fira Sans Bold}%
+    }{%
+      \iffontsavailable{Fira Sans Bold OT}{%
+        \setfontfamily\extraboldsans{Fira Sans Bold OT}%
+      }{%
+        \PackageWarning{beamerthememetropolis}{%
+          Could not find Fira Sans Bold font%
+        }
+      }
+    }
+    \iffontsavailable{Fira Code, Fira Code Medium}{%
+      \setmonofont[BoldFont={Fira Code Medium},Scale=0.9]{Fira Code}%
+    }{%
+      \iffontsavailable{Fira Mono, Fira Mono Medium}{%
+        \setmonofont[BoldFont={Fira Mono Medium},Scale=0.9]{Fira Mono}%
+      }{%
+        \iffontsavailable{Fira Mono OT, Fira Mono Medium OT}{%
+          \setmonofont[BoldFont={Fira Mono Medium OT},Scale=0.9]{Fira Mono OT}%
+        }{%
+          \PackageWarning{beamerthememetropolis}{%
+            Could not find Fira Code or Fira Mono fonts%
+          }
+        }
+      }
+    }
+    \iffontsavailable{Charter BT}{%
+      \setmainfont{Charter BT}%
+    }{%
+      \iffontsavailable{Charter}{%
+        \setmainfont{Charter}%
+      }{
+        \iffontsavailable{XCharter}{%
+          \setmainfont{XCharter}%
+        }{}%
+      }%
+    }
+    \renewcommand{\addfontfeaturefortabular}{\addfontfeature{Numbers={Monospaced}}}
+  }{%
+    \PackageWarning{beamerthememetropolis}{%
+      You need to compile with XeLaTeX or LuaLaTeX to select the Fira fonts%
+    }%
+  }
+}
+
+\newcommand{\metropolis@font@typeface@franklin}{%
+  \ifboolexpr{bool {xetex} or bool {luatex}}{
+    \iffontsavailable{Libre Franklin Light,%
+                      Libre Franklin Light Italic,%
+                      Libre Franklin Semibold,%
+                      Libre Franklin Semibold Italic,%
+                      Libre Franklin Bold}%
+    {%
+      \setsansfont[ItalicFont={Libre Franklin Light Italic},%
+                   BoldFont={Libre Franklin Semibold},%
+                   BoldItalicFont={Libre Franklin Semibold Italic},%
+                   Scale=0.95]%
+                  {Libre Franklin Light}%
+      \setfontfamily\extraboldsans{Libre Franklin Bold}%
+    }{%
+      \PackageWarning{beamerthememetropolis}{%
+        Could not find Libre Franklin fonts%
+      }
+    }
+    \iffontsavailable{Hack}{%
+      \setmonofont[Scale=0.85]{Hack}%
+    }{%
+      \PackageWarning{beamerthememetropolis}{%
+        Could not find Hack fonts%
+      }
+    }
+    \iffontsavailable{Libre Baskerville}{%
+      \setmainfont[Scale=0.85]{Libre Baskerville}%
+    }{}
+    \renewcommand{\addfontfeaturefortabular}{}
+  }{%
+    \PackageWarning{beamerthememetropolis}{%
+      You need to compile with XeLaTeX or LuaLaTeX to select the Franklin fonts%
+    }%
+  }
+}
+
+\newcommand{\metropolis@font@typeface@source}{%
+  \ifboolexpr{bool {xetex} or bool {luatex}}{
+    \iffontsavailable{Source Sans Pro Light,%
+                      Source Sans Pro Light Italic,%
+                      Source Sans Pro,%
+                      Source Sans Pro Italic,%
+                      Source Sans Pro Bold}%
+    {%
+      \setsansfont[ItalicFont={Source Sans Pro Light Italic},%
+                   BoldFont={Source Sans Pro},%
+                   BoldItalicFont={Source Sans Pro Italic},%
+                   Scale=1.05]%
+                  {Source Sans Pro Light}%
+      \setfontfamily\extraboldsans{Source Sans Pro Bold}%
+    }{%
+      \PackageWarning{beamerthememetropolis}{%
+        Could not find Source Sans Pro fonts%
+      }
+    }
+    \iffontsavailable{Source Code Pro,%
+                      Source Code Pro Semibold,%
+                      Source Code Pro Italic,%
+                      Source Code Pro Semibold Italic}{%
+      \setmonofont[BoldFont={Source Code Pro Semibold},%
+                   ItalicFont={Source Code Pro Italic},%
+                   BoldItalicFont={Source Code Pro Semibold Italic},%
+                   Scale=0.85]{Source Code Pro}%
+    }{%
+      \PackageWarning{beamerthememetropolis}{%
+        Could not find Source Code Pro fonts%
+      }
+    }
+    \iffontsavailable{Source Serif Pro,%
+                      Source Serif Pro Light,%
+                      Source Serif Pro Italic,%
+                      Source Serif Pro Light Italic}{%
+      \setmainfont[BoldFont={Source Serif Pro},%
+                   ItalicFont={Source Serif Pro Light Italic},%
+                   BoldItalicFont={Source Serif Pro Italic},%
+                   Scale=0.95]{Source Serif Pro Light}%
+    }{}
+    \renewcommand{\addfontfeaturefortabular}{}
+  }{%
+    \PackageWarning{beamerthememetropolis}{%
+      You need to compile with XeLaTeX or LuaLaTeX to select the Source Pro fonts%
+    }%
+  }
+}
+
+\newcommand{\metropolis@font@typeface@arial}{%
+  \ifboolexpr{bool {xetex} or bool {luatex}}{
+    \iffontsavailable{Arial Light,%
+                      Arial Light Italic,%
+                      Arial Medium,%
+                      Arial Medium Italic,%
+                      Arial Bold}%
+    {%
+      \setsansfont[ItalicFont={Arial Light Italic},%
+                   BoldFont={Arial Medium},%
+                   BoldItalicFont={Arial Medium Italic},%
+                   Scale=1.0]%
+                  {Arial Light}%
+      \setfontfamily\extraboldsans{Arial Bold}%
+    }{%
+        \iffontsavailable{Inter Light,%
+                          Inter Light Italic,%
+                          Inter Medium,%
+                          Inter Medium Italic,%
+                          Inter Bold}%
+        {%
+          \setsansfont[ItalicFont={Inter Light Italic},%
+                       BoldFont={Inter Medium},%
+                       BoldItalicFont={Inter Medium Italic},%
+                       Scale=0.9]%
+                    {Inter Light}%
+          \setfontfamily\extraboldsans{Inter Bold}%
+        }{%
+            \PackageWarning{beamerthememetropolis}{%
+                Could not find Arial or Inter fonts%
+            }
+        }
+    }
+    \iffontsavailable{Courier New}{%
+      \setmonofont[Scale=0.85]{Courier New}%
+    }{%
+      \PackageWarning{beamerthememetropolis}{%
+        Could not find Courier New fonts%
+      }
+    }
+    \iffontsavailable{Times}{%
+      \setmainfont[]{Times}%
+    }{%
+      \iffontsavailable{Times New Roman}{%
+        \setmainfont[]{Times New Roman}%
+      }{}
+    }
+    \renewcommand{\addfontfeaturefortabular}{}
+  }{%
+    \PackageWarning{beamerthememetropolis}{%
+      You need to compile with XeLaTeX or LuaLaTeX to select the Arial fonts%
+    }%
+  }
+}
+
+
+\setbeamerfont{title}{size=\Large,%
+                      series=\bfseries}
+\setbeamerfont{author}{size=\small}
+\setbeamerfont{date}{size=\small}
+\setbeamerfont{section title}{size=\Large,%
+                              series=\bfseries}
+\setbeamerfont{block title}{size=\normalsize,%
+                            series=\bfseries}
+\setbeamerfont{block title alerted}{size=\normalsize,%
+                                    series=\bfseries}
+\setbeamerfont{block title warning}{size=\normalsize,%
+                                    series=\bfseries}
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamerfont{warning text}{series=\bfseries}
+\setbeamerfont*{subtitle}{size=\large}
+\setbeamerfont{frametitle}{size=\large,%
+                           series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{caption name}{series=\bfseries}
+\setbeamerfont{description item}{series=\bfseries}
+\setbeamerfont{item projected}{size=\small,%
+                               series=\bfseries}
+\setbeamerfont{subitem projected}{size=\footnotesize,%
+                                  series=\bfseries}
+\setbeamerfont{subsubitem projected}{size=\scriptsize,%
+                                     series=\normalfont}
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+\setbeamerfont{bibliography entry author}{size=\normalsize,%   These have no effect with BibLaTeX!!
+                                          series=\normalfont}
+\setbeamerfont{bibliography entry title}{size=\normalsize,%
+                                         series=\bfseries}
+\setbeamerfont{bibliography entry location}{size=\normalsize,%
+                                            series=\normalfont}
+\setbeamerfont{bibliography entry note}{size=\small,%
+                                        series=\normalfont}
+\setbeamerfont{quote}{series=\itshape}
+\setbeamerfont{standout}{size=\Large,%
+                         series=\bfseries}
+\pgfkeys{
+  /metropolis/font/titleformat title/.cd,
+    .is choice,
+    regular/.code={%
+      \let\metropolis@titleformat\@empty%
+      \setbeamerfont{title}{shape=\normalfont}%
+    },
+    smallcaps/.code={%
+      \let\metropolis@titleformat\@empty%
+      \setbeamerfont{title}{shape=\scshape}%
+    },
+    allsmallcaps/.code={%
+      \let\metropolis@titleformat\lowercase%
+      \setbeamerfont{title}{shape=\scshape}%
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat title=allsmallcaps can lead to problems%
+      }
+    },
+    allcaps/.code={%
+      \let\metropolis@titleformat\uppercase%
+      \setbeamerfont{title}{shape=\normalfont}
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat title=allcaps can lead to problems%
+      }
+    },
+}
+\pgfkeys{
+  /metropolis/font/titleformat subtitle/.cd,
+    .is choice,
+    regular/.code={%
+      \let\metropolis@subtitleformat\@empty%
+      \setbeamerfont{subtitle}{shape=\normalfont}%
+    },
+    smallcaps/.code={%
+      \let\metropolis@subtitleformat\@empty%
+      \setbeamerfont{subtitle}{shape=\scshape}%
+    },
+    allsmallcaps/.code={%
+      \let\metropolis@subtitleformat\lowercase%
+      \setbeamerfont{subtitle}{shape=\scshape}%
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat subtitle=allsmallcaps can lead to problems%
+      }
+    },
+    allcaps/.code={%
+      \let\metropolis@subtitleformat\uppercase%
+      \setbeamerfont{subtitle}{shape=\normalfont}%
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat subtitle=allcaps can lead to problems%
+      }
+    },
+}
+\pgfkeys{
+  /metropolis/font/titleformat section/.cd,
+    .is choice,
+    regular/.code={%
+      \let\metropolis@sectiontitleformat\@empty%
+      \setbeamerfont{section title}{shape=\normalfont}%
+    },
+    smallcaps/.code={%
+      \let\metropolis@sectiontitleformat\@empty%
+      \setbeamerfont{section title}{shape=\scshape}%
+    },
+    allsmallcaps/.code={%
+      \let\metropolis@sectiontitleformat\MakeLowercase%
+      \setbeamerfont{section title}{shape=\scshape}%
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat section=allsmallcaps can lead to problems%
+      }
+    },
+    allcaps/.code={%
+      \let\metropolis@sectiontitleformat\MakeUppercase%
+      \setbeamerfont{section title}{shape=\normalfont}%
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat section=allcaps can lead to problems%
+      }
+    },
+}
+\pgfkeys{
+  /metropolis/font/titleformat frame/.cd,
+    .is choice,
+    regular/.code={%
+      \let\metropolis@frametitleformat\@empty%
+      \setbeamerfont{frametitle}{shape=\normalfont}%
+    },
+    smallcaps/.code={%
+      \let\metropolis@frametitleformat\@empty%
+      \setbeamerfont{frametitle}{shape=\scshape}%
+    },
+    allsmallcaps/.code={%
+      \let\metropolis@frametitleformat\MakeLowercase%
+      \setbeamerfont{frametitle}{shape=\scshape}%
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat frame=allsmallcaps can lead to problems%
+      }
+    },
+    allcaps/.code={%
+      \let\metropolis@frametitleformat\MakeUppercase%
+      \setbeamerfont{frametitle}{shape=\normalfont}
+      \PackageWarning{beamerthememetropolis}{%
+        Be aware that titleformat frame=allcaps can lead to problems%
+      }
+    },
+}
+\pgfkeys{
+  /metropolis/font/typeface/.cd,
+    .is choice,
+    arial/.code=\metropolis@font@typeface@arial,
+    fira/.code=\metropolis@font@typeface@fira,
+    franklin/.code=\metropolis@font@typeface@franklin,
+    source/.code=\metropolis@font@typeface@source,
+}
+\pgfkeys{
+  /metropolis/font/.cd,
+  titleformattitle/.code=\pgfkeysalso{titleformat title=#1},
+  titleformatsubtitle/.code=\pgfkeysalso{titleformat subtitle=#1},
+  titleformatsection/.code=\pgfkeysalso{titleformat section=#1},
+  titleformatframe/.code=\pgfkeysalso{titleformat frame=#1},
+}
+\newcommand{\metropolis@font@setdefaults}{
+  \pgfkeys{/metropolis/font/.cd,
+    titleformat title=regular,
+    titleformat subtitle=regular,
+    titleformat section=regular,
+    titleformat frame=regular,
+    typeface=fira,
+  }
+}
+\def\metropolis@titleformat#1{#1}
+\def\metropolis@subtitleformat#1{#1}
+\def\metropolis@sectiontitleformat#1{#1}
+\def\metropolis@frametitleformat#1{#1}
+\patchcmd{\beamer@title}%
+  {\def\inserttitle{#2}}%
+  {\def\inserttitle{\metropolis@titleformat{#2}}}%
+  {}%
+  {\PackageError{beamerfontthememetropolis}{Patching title failed}\@ehc}
+\patchcmd{\beamer@subtitle}%
+  {\def\insertsubtitle{#2}}%
+  {\def\insertsubtitle{\metropolis@subtitleformat{#2}}}%
+  {}%
+  {\PackageError{beamerfontthememetropolis}{Patching subtitle failed}\@ehc}
+\patchcmd{\sectionentry}
+  {\def\insertsectionhead{#2}}
+  {\def\insertsectionhead{\metropolis@sectiontitleformat{#2}}}
+  {}
+  {\PackageError{beamerfontthememetropolis}{Patching section title failed}\@ehc}
+\@tempswafalse
+\patchcmd{\beamer@section}
+  {\def\insertsectionhead{\hyperlink{Navigation\the\c@page}{#1}}}
+  {\def\insertsectionhead{\hyperlink{Navigation\the\c@page}{%
+    \metropolis@sectiontitleformat{#1}}}}
+  {\@tempswatrue}
+  {}
+\patchcmd{\beamer@section}
+  {\protected@edef\insertsectionhead{\noexpand\hyperlink{Navigation\the\c@page}{#1}}}
+  {\protected@edef\insertsectionhead{\noexpand\hyperlink{Navigation\the\c@page}{%
+    \noexpand\metropolis@sectiontitleformat{#1}}}}
+  {\@tempswatrue}
+  {}
+\if@tempswa\else
+  \PackageError{beamerfontthememetropolis}{Patching section title failed}\@ehc
+\fi
+\@tempswafalse
+\patchcmd{\beamer@subsection}
+  {\def\insertsubsectionhead{\hyperlink{Navigation\the\c@page}{#1}}}
+  {\def\insertsubsectionhead{\hyperlink{Navigation\the\c@page}{%
+    \metropolis@sectiontitleformat{#1}}}}
+  {\@tempswatrue}
+  {}
+\patchcmd{\beamer@subsection}
+  {\protected@edef\insertsubsectionhead{\noexpand\hyperlink{Navigation\the\c@page}{#1}}}
+  {\protected@edef\insertsubsectionhead{\noexpand\hyperlink{Navigation\the\c@page}{%
+    \noexpand\metropolis@sectiontitleformat{#1}}}}
+  {\@tempswatrue}
+  {}
+\if@tempswa\else
+  \PackageError{beamerfontthememetropolis}{Patching section title failed}\@ehc
+\fi
+\patchcmd{\beamer@@frametitle}
+  {{%
+      \gdef\insertframetitle{{#2\ifnum\beamer@autobreakcount>0\relax{}\space%
+      \usebeamertemplate*{frametitle continuation}\fi}}%
+    \gdef\beamer@frametitle{#2}%
+    \gdef\beamer@shortframetitle{#1}%
+    }}
+  {{%
+      \gdef\insertframetitle{{\metropolis@frametitleformat{#2}\ifnum%
+      \beamer@autobreakcount>0\relax{}\space%
+      \usebeamertemplate*{frametitle continuation}\fi}}%
+    \gdef\beamer@frametitle{#2}%
+    \gdef\beamer@shortframetitle{#1}%
+    }}
+  {}
+  {\PackageError{beamerfontthememetropolis}{Patching frame title failed}\@ehc}
+\metropolis@font@setdefaults
+\ProcessPgfPackageOptions{/metropolis/font}
+\endinput
+%%
+%% End of file `beamerfontthememetropolis-ju.sty'.

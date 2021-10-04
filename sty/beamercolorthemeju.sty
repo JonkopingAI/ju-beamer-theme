@@ -1,0 +1,301 @@
+%%
+%% ---------------------------------------------------------------------------
+%% Modified 2021 by Marcel Bollmann.
+%% ---------------------------------------------------------------------------
+%% Copyright 2015 Matthias Vogelgesang and the LaTeX community. A full list of
+%% contributors can be found at
+%% 
+%%     https://github.com/matze/mtheme/graphs/contributors
+%% 
+%% and the original template was based on the HSRM theme by Benjamin Weiss.
+%% 
+%% ---------------------------------------------------------------------------
+%% This work is licensed under a Creative Commons Attribution-ShareAlike 4.0
+%% International License (https://creativecommons.org/licenses/by-sa/4.0/).
+%% ---------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamercolorthemeju}[2021/10/04 JU Color Theme]
+\RequirePackage{pgfopts}
+\RequirePackage{tikz}
+\usetikzlibrary{positioning,calc}
+\pgfkeys{
+  /metropolis/color/block/.cd,
+    .is choice,
+    transparent/.code=\metropolis@block@transparent,
+    fill/.code=\metropolis@block@fill,
+}
+\pgfkeys{
+  /metropolis/color/itemize/.cd,
+    .is choice,
+    colored/.code=\metropolis@itemize@colored,
+    mono/.code=\metropolis@itemize@mono,
+}
+\pgfkeys{
+  /metropolis/color/maincolor/.cd,
+    .is choice,
+    purple/.code=\metropolis@colors@purple,
+    grey/.code=\metropolis@colors@grey,
+}
+\newcommand{\metropolis@color@setdefaults}{
+  \pgfkeys{/metropolis/color/.cd,
+    maincolor=purple,
+    block=transparent,
+    itemize=mono,
+  }
+}
+
+% main colors
+\definecolor{juPurple}{RGB}{150,27,129}
+\definecolor{juGrey}{RGB}{121,121,121}
+
+% complementary colors
+\definecolor{juBeige}{RGB}{235,235,223}
+\definecolor{juYellow}{RGB}{255,181,0}
+\definecolor{juTurquoise}{RGB}{0,172,169}
+\definecolor{juDarkBlue}{RGB}{0,56,101}
+
+% shades
+\definecolor{juPurpleFade1}{RGB}{168,77,151}
+\definecolor{juPurpleFade2}{RGB}{198,146,194}
+\definecolor{juPurpleFade3}{RGB}{231,213,234}
+\definecolor{juPurpleDarker}{RGB}{128,22,111}
+\definecolor{juGreyFade1}{RGB}{147,147,147}
+\definecolor{juGreyFade2}{RGB}{187,187,187}
+\definecolor{juGreyFade3}{RGB}{228,228,228}
+\definecolor{juYellowFade1}{RGB}{253,199,67}
+\definecolor{juYellowFade2}{RGB}{255,218,127}
+\definecolor{juYellowFade3}{RGB}{255,240,204}
+\definecolor{juTurquoiseFade1}{RGB}{85,189,186}
+\definecolor{juTurquoiseFade2}{RGB}{180,214,212}
+\definecolor{juTurquoiseFade3}{RGB}{227,239,239}
+\definecolor{juDarkBlueFade1}{RGB}{51,96,132}
+\definecolor{juDarkBlueFade2}{RGB}{127,155,178}
+\definecolor{juDarkBlueFade3}{RGB}{204,215,224}
+
+\setbeamercolor{normal text}{%
+  fg=black!94,
+  bg=white
+}
+\usebeamercolor[fg]{normal text}
+\setbeamercolor{alerted text}{%
+  fg=juPurple
+}
+\setbeamercolor{example text}{%
+  fg=juTurquoise
+}
+\setbeamercolor{warning text}{%
+  fg=juYellow
+}
+\setbeamercolor{quotation mark}{%
+  fg=juGreyFade2
+}
+
+\newcommand{\metropolis@colors@grey}{
+  \setbeamercolor{palette primary}{%
+    use=normal text,
+    fg=black!2,
+    bg=juGrey
+  }
+  \setbeamercolor{palette variant faded1}{%
+    use=normal text,
+    fg=black!2,
+    bg=juGreyFade1
+  }
+  \setbeamercolor{palette variant faded2}{%
+    use=normal text,
+    fg=black!2,
+    bg=juGreyFade2
+  }
+  \setbeamercolor{progress bar}{%
+    use=alerted text,
+    fg=juPurpleFade1,
+    bg=juGrey
+  }
+  \setbeamercolor{footline standout}{
+    fg=juGreyFade3,
+    bg=
+  }
+}
+\newcommand{\metropolis@colors@purple}{
+  \setbeamercolor{palette primary}{%
+    use=normal text,
+    fg=black!2,
+    bg=juPurple
+  }
+  \setbeamercolor{palette variant faded1}{%
+    use=normal text,
+    fg=black!2,
+    bg=juPurpleFade1
+  }
+  \setbeamercolor{palette variant faded2}{%
+    use=normal text,
+    fg=black!2,
+    bg=juPurpleFade2
+  }
+  \setbeamercolor{progress bar}{%
+    use=alerted text,
+    fg=juPurpleFade2,
+    bg=juGreyFade2
+  }
+  \setbeamercolor{footline standout}{
+    fg=juGreyFade3,
+    bg=
+  }
+}
+\setbeamercolor{background on title/section}{%
+  use=palette primary,
+  bg=palette primary.bg
+}
+\setbeamercolor{titlelike}{use=palette primary, parent=palette primary}
+\setbeamercolor{author}{use=palette primary, parent=palette primary}
+\setbeamercolor{date}{use=palette primary, parent=palette primary}
+\setbeamercolor{institute}{use=palette primary, parent=palette primary}
+\setbeamercolor{structure}{use=normal text, fg=normal text.fg}  % TODO ?
+\setbeamercolor{frametitle}{%
+  use=palette primary,
+  parent=palette primary
+}
+\setbeamercolor{title separator}{
+  use=progress bar,
+  parent=progress bar
+}
+\setbeamercolor{progress bar in head/foot}{%
+  use=progress bar,
+  parent=progress bar
+}
+\setbeamercolor{progress bar in section page}{
+  use=progress bar,
+  parent=progress bar
+}
+\newcommand{\metropolis@block@transparent}{
+  \setbeamercolor{block title}{%
+    use=normal text,
+    fg=normal text.fg,
+    bg=
+  }
+  \setbeamercolor{block body}{
+    bg=
+  }
+  \setbeamercolor{block title alerted}{%
+    use={block title, alerted text},
+    bg=block title.bg,
+    fg=alerted text.fg
+  }
+  \setbeamercolor{block title example}{%
+    use={block title, example text},
+    bg=block title.bg,
+    fg=example text.fg
+  }
+  \setbeamercolor{block title warning}{%
+    use={block title},
+    bg=block title.bg,
+    fg=juYellow
+  }
+  \setbeamercolor{block body alerted}{use=block body, parent=block body, bg=block body.bg}
+  \setbeamercolor{block body example}{use=block body, parent=block body, bg=block body.bg}
+  \setbeamercolor{block body warning}{use=block body, parent=block body, bg=block body.bg}
+  \setbeamertemplate{blocks}[rounded]
+  \setbeamertemplate{block warning begin}[rounded]
+  \setbeamertemplate{block warning end}[rounded]
+}
+\newcommand{\metropolis@block@fill}{
+  \setbeamercolor{block title}{%
+    use=normal text,
+    fg=normal text.bg,
+    bg=juGrey
+  }
+  \setbeamercolor{block body}{
+    use={block title, normal text},
+    bg=juGreyFade3
+  }
+  \setbeamercolor{block title alerted}{%
+    use=normal text,
+    bg=juPurple,
+    fg=normal text.bg
+  }
+  \setbeamercolor{block body alerted}{
+    use=normal text,
+    bg=juPurpleFade3,
+    fg=normal text.fg
+  }
+  \setbeamercolor{block title example}{%
+    use=normal text,
+    bg=juTurquoise,
+    fg=normal text.bg
+  }
+  \setbeamercolor{block body example}{
+    use=normal text,
+    bg=juTurquoiseFade3,
+    fg=normal text.fg
+  }
+  \setbeamercolor{block title warning}{%
+    use=normal text,
+    bg=juYellow,
+    fg=normal text.bg
+  }
+  \setbeamercolor{block body warning}{
+    use=normal text,
+    bg=juYellowFade3,
+    fg=normal text.fg
+  }
+  \setbeamertemplate{blocks}[default]
+  \setbeamertemplate{block warning begin}[default]
+  \setbeamertemplate{block warning end}[default]
+}
+\setbeamercolor{footnote}{fg=juGrey}
+\setbeamercolor{footnote mark}{fg=.}
+\setbeamercolor{footline}{
+    fg=juGrey,
+    bg=
+}
+\setbeamercolor{headlogo line white}{
+    fg=white,
+}
+\setbeamercolor{headlogo line black}{
+    fg=black,
+}
+
+%% MB: Very basic support for TOC
+\setbeamerfont{section in toc}{size=\normalsize}
+\setbeamerfont{subsection in toc}{size=\small}
+\setbeamertemplate{section in toc}{\bigskip\null\inserttocsectionnumber.\space\inserttocsection\smallskip\par}
+\setbeamertemplate{subsection in toc}{\qquad{\scalebox{.65}{\raisebox{1.25\p@}{$\blacksquare$}}}\hspace{1em}\inserttocsubsection\par}
+%\setbeamercolor{section in toc}{use=palette primary, parent=palette primary}
+%\setbeamercolor{subsection in toc}{use=palette primary, parent=palette primary}
+\setbeamercolor{section in toc}{use=normal text, parent=normal text}
+\setbeamercolor{subsection in toc}{use=normal text, parent=normal text}
+%%%%%%%%%%%
+
+\setbeamercolor{bibliography entry author}{use=normal text, fg=normal text.fg}
+\setbeamercolor{bibliography entry title}{fg=juTurquoise}
+\setbeamercolor{bibliography entry location}{fg=juGrey}
+
+%% MB: nicer enumerate environments
+\setbeamercolor{item}{use=normal text, parent=normal text, fg=normal text.fg}
+\newcommand{\metropolis@itemize@colored}{
+    \setbeamercolor{itemize item}{use=palette primary, parent=palette primary, fg=palette primary.bg}
+    \setbeamercolor{itemize subitem}{use=palette primary, parent=palette primary, fg=juTurquoise}
+    \setbeamercolor{itemize subsubitem}{use=palette primary, parent=palette primary, fg=juGrey}
+    \setbeamercolor{item projected}{use=palette primary, parent=palette primary, fg=palette primary.fg, bg=palette primary.bg}
+    \setbeamercolor{subitem projected}{fg=black!2, bg=juTurquoise}
+    \setbeamercolor{subsubitem projected}{fg=black!2, bg=juGrey}
+}
+\newcommand{\metropolis@itemize@mono}{
+    \setbeamercolor{itemize item}{use=normal text, parent=normal text, fg=normal text.fg}
+    \setbeamercolor{itemize subitem}{use=normal text, parent=normal text, fg=normal text.fg}
+    \setbeamercolor{itemize subsubitem}{use=normal text, parent=normal text, fg=normal text.fg}
+    \setbeamercolor{item projected}{use=normal text, parent=normal text, fg=normal text.bg, bg=juGrey}
+    \setbeamercolor{subitem projected}{use=normal text, parent=normal text, fg=normal text.bg, bg=juGrey}
+    \setbeamercolor{subsubitem projected}{use=normal text, parent=normal text, fg=normal text.bg, bg=juGrey}
+}
+
+\newcommand{\highlight}[1]{\textcolor{juTurquoise}{\usebeamerfont{alerted text}#1}}
+\newcommand{\alertExample}[1]{\textcolor{juDarkBlueFade1}{\usebeamerfont{alerted text}#1}}
+
+\metropolis@color@setdefaults
+\ProcessPgfPackageOptions{/metropolis/color}
+
+\mode<all>
+\endinput
+%%
+%% End of file `beamercolorthememetropolis.sty'.
