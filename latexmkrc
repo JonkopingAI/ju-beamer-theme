@@ -1,31 +1,14 @@
-$ENV{'TEXINPUTS'}='./sty//:' . $ENV{'TEXINPUTS'}; 
+# Put auxiliary files in separate directory
+$aux_dir = "aux";
+$emulate_aux = 1;
 
-# support for the glossaries package:
-add_cus_dep('glo', 'gls', 0, 'makeglossaries');
-add_cus_dep('acn', 'acr', 0, 'makeglossaries');
-sub makeglossaries {
-  system("makeglossaries \"$_[0]\"");
-}
+# Extra file extensions to remove when running `latexmk -C`
+$clean_full_ext = "%R.bbl %R.fls %R.pyg %R.nav %R.run.xml %R.snm %R.vrb %R.??.vrb";
 
-# support for the nomencl package:
-add_cus_dep('nlo', 'nls', 0, 'makenlo2nls');
-sub makenlo2nls {
-  system("makeindex -s nomencl.ist -o \"$_[0].nls\" \"$_[0].nlo\"");
-}
+# Use LuaLaTeX
+$pdf_mode = 4;
 
-# from the documentation for V. 2.03 of asymptote:
-sub asy {return system("asy \"$_[0]\"");}
-add_cus_dep("asy","eps",0,"asy");
-add_cus_dep("asy","pdf",0,"asy");
-add_cus_dep("asy","tex",0,"asy");
-
-# metapost rule from http://tex.stackexchange.com/questions/37134
-add_cus_dep('mp', '1', 0, 'mpost');
-sub mpost {
-  my $file = $_[0];
-  my ($name, $path) = fileparse($file);
-  pushd($path);
-  my $return = system "mpost $name";
-  popd();
-  return $return;
-}
+# Flags when invoking LuaLaTeX
+# - Package "minted" requires --shell-escape
+# - Halting on error is more convenient IMO
+$lualatex_default_switches = "--shell-escape --halt-on-error";
