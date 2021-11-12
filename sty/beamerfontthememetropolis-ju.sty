@@ -47,7 +47,9 @@
     \fi%
   }
   
-  \setfontfamily\extraboldsans{Arial Bold}
+  \iffontsavailable{Arial Bold}{%
+    \setfontfamily\extraboldsans{Arial Bold}%
+  }{}
   \newcommand{\addfontfeaturefortabular}{}
   \AtBeginEnvironment{tabular}{%
     \addfontfeaturefortabular{}%
@@ -75,6 +77,9 @@
     You need to compile with XeLaTeX or LuaLaTeX to select different fonts%
   }%
   \newcommand{\extraboldsans}{\bfseries}
+}
+
+\newcommand{\metropolis@font@default}{%
 }
 
 \newcommand{\metropolis@font@typeface@fira}{%
@@ -440,6 +445,7 @@
     fira/.code=\metropolis@font@typeface@fira,
     franklin/.code=\metropolis@font@typeface@franklin,
     source/.code=\metropolis@font@typeface@source,
+    default/.code=\metropolis@font@default,
 }
 \pgfkeys{
   /metropolis/font/.cd,
@@ -454,7 +460,7 @@
     titleformat subtitle=regular,
     titleformat section=regular,
     titleformat frame=regular,
-    typeface=fira,
+    typeface=default,
   }
 }
 \def\metropolis@titleformat#1{#1}
