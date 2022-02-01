@@ -191,10 +191,20 @@
 
 % This makes the logo appear on the title slide
 \newcommand{\metropolis@titlelogo@jth}{
-  \titlegraphic{\hfill\includegraphics[height=1.4cm]{img/JTH_A_neg_300ppi.png}}
+  \titlegraphic{%
+  \begin{tikzpicture}[overlay,remember picture]
+  \node[xshift=-2.4cm,yshift=1.6cm] at (current page.south east){
+    \includegraphics[height=1.4cm]{sty/img/JTH_A_neg_300ppi.png}
+  };
+  \end{tikzpicture}}%
 }
 \newcommand{\metropolis@titlelogo@ju}{
-  \titlegraphic{\hfill\includegraphics[height=1.4cm]{img/JU_A_neg_300ppi.png}}
+  \titlegraphic{%
+  \begin{tikzpicture}[overlay,remember picture]
+  \node[xshift=-2.4cm,yshift=1.6cm] at (current page.south east){
+    \includegraphics[height=1.4cm]{sty/img/JU_A_neg_300ppi.png}
+  };
+  \end{tikzpicture}}%
 }
 \newcommand{\metropolis@titlelogo@none}{
   \titlegraphic{}
