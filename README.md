@@ -11,7 +11,7 @@ All the usual customizations provided by the Metropolis theme should work; if yo
 
 ## Quickstart
 
-:notebook: If you [write to me](mailto:marcel.bollmann@ju.se) from a `@ju.se` e-mail address, I can share a link to an **Overleaf template**.
+:notebook: If you [write to me](mailto:marcel.bollmann@liu.se) from a `@ju.se` e-mail address, I can share a link to an **Overleaf template**.
 
 1. Download the desired [**logotypes** from the JU
    intranet](https://intranet.hj.se/intranet/en/service-and-support/marketing-and-communication/graphic-profile/logotypes.html)
